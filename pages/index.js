@@ -1,7 +1,7 @@
-import Head from "next/head";
-import Map from "../components/map";
+import Head from 'next/head'
+import Map from '../components/map'
 
-const DEFAULT_CENTER = [48.864716, 2.349014];
+const DEFAULT_CENTER = [48.864716, 2.349014]
 
 export default function Home() {
   return (
@@ -29,5 +29,5 @@ export default function Home() {
         </Map>
       </div>
     </div>
-  );
+  )
 }
