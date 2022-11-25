@@ -11,6 +11,7 @@
     "format": "npm run prettier -- --write"
   },
   "dependencies": {
+    "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
     "leaflet": "^1.9.3",
