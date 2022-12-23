@@ -26,7 +26,7 @@ export default function Home({ profiles }) {
                     key={profile._id}
                     position={[
                       profile?.geolocation?.lat,
-                      profile?.geolocation.lon
+                      profile?.geolocation?.lon
                     ]}
                   >
                     <Popup>{profile?.primary_url}</Popup>
