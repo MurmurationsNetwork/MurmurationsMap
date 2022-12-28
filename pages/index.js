@@ -1,28 +1,53 @@
 import Head from 'next/head'
 import Map from '../components/map'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const DEFAULT_CENTER = [48.864716, 2.349014]
 
-export default function Home({ data }) {
-  const [profiles, setProfiles] = useState(data.profiles)
+export default function Home({ schemas }) {
+  const [profiles, setProfiles] = useState([])
+  const [isLoading, setLoading] = useState(false)
   const [schema, setSchema] = useState('')
   const [tags, setTags] = useState('')
-  const schemas = data.schemas
 
-  const getProfiles = async event => {
-    let getParams = ''
-    if (schema !== '') {
-      getParams += 'schema=' + schema + '&'
+  useEffect(() => {
+    setLoading(true)
+    fetch('/api/profiles')
+      .then(res => res.json())
+      .then(data => {
+        setProfiles(data)
+        setLoading(false)
+      })
+  }, [])
+
+  if (isLoading)
+    return (
+      <h1>Map is Loading...It takes a while for the first time loading!</h1>
+    )
+
+  const handleSubmit = async event => {
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault()
+
+    const data = {
+      schema: event.target.schema.value,
+      tags: event.target.tags.value
     }
-    if (tags !== '') {
-      getParams += 'tags=' + tags
+
+    console.log('data', data)
+
+    let getParams = ''
+    if (data.schema !== '') {
+      getParams += 'schema=' + data.schema + '&'
+    }
+    if (data.tags !== '') {
+      getParams += 'tags=' + data.tags
     }
 
     const res = await fetch('/api/profiles?' + getParams)
     const json = await res.json()
 
-    setProfiles(json?.profiles)
+    setProfiles(json)
   }
 
   return (
@@ -33,13 +58,14 @@ export default function Home({ data }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col h-screen">
-        <div className="basis-1/12 flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:px-96 md:mx-24">
+        <form
+          onSubmit={handleSubmit}
+          className="basis-1/12 flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:px-96 md:mx-24"
+        >
           <div>
             <select
               className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               name="schema"
-              value={schema}
-              onChange={e => setSchema(e.target.value)}
             >
               <option value="">All schemas</option>
               {schemas?.map(s => (
@@ -59,20 +85,17 @@ export default function Home({ data }) {
               type="text"
               placeholder="Tags"
               name="tags"
-              value={tags}
-              onChange={e => setTags(e.target.value)}
             />
           </div>
           <div>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={getProfiles}
+              type="submit"
             >
               Filter
             </button>
           </div>
-        </div>
+        </form>
         <div className="basis-11/12">
           <Map className="w-full h-full" center={DEFAULT_CENTER} zoom={4}>
             {(TileLayer, Marker, Popup, MarkerClusterGroup) => (
@@ -104,17 +127,12 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps(context) {
-  const res = await fetch(process.env.HOST + '/api/profiles')
+  const res = await fetch(process.env.CDN_URL)
   const json = await res.json()
 
-  const cdnRes = await fetch(process.env.CDN_URL)
-  const cdnJson = await cdnRes.json()
   return {
     props: {
-      data: {
-        profiles: json?.profiles,
-        schemas: cdnJson?.schema_list
-      }
+      schemas: json?.schema_list
     }
   }
 }

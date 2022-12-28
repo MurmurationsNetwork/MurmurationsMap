@@ -1,11 +1,6 @@
-import nextConnect from 'next-connect'
-import middleware from '../../libs/database'
+import clientPromise from '../../libs/mongo'
 
-const handler = nextConnect()
-
-handler.use(middleware)
-
-handler.get(async (req, res) => {
+export default async function handler(req, res) {
   let queries = { geolocation: { $exists: true } }
   if (req?.query?.schema) {
     queries.linked_schemas = { $in: [req.query.schema] }
@@ -14,8 +9,9 @@ handler.get(async (req, res) => {
     let tags = req.query.tags.split(',')
     queries.tags = { $all: tags }
   }
-  let doc = await req.db.collection('profiles').find(queries)?.toArray()
-  res.json({ profiles: doc })
-})
 
-export default handler
+  const client = await clientPromise
+  const db = client.db('mapdata')
+  let doc = await db.collection('profiles').find(queries)?.toArray()
+  res.status(200).json(doc)
+}
