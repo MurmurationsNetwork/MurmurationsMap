@@ -5,9 +5,10 @@ import { useState } from 'react'
 const DEFAULT_CENTER = [48.864716, 2.349014]
 
 export default function Home({ data }) {
-  const [profiles, setProfiles] = useState(data)
+  const [profiles, setProfiles] = useState(data.profiles)
   const [schema, setSchema] = useState('')
   const [tags, setTags] = useState('')
+  const schemas = data.schemas
 
   const getProfiles = async event => {
     let getParams = ''
@@ -41,12 +42,15 @@ export default function Home({ data }) {
               onChange={e => setSchema(e.target.value)}
             >
               <option value="">All schemas</option>
-              <option value="karte_von_morgen-v1.0.0">
-                karte_von_morgen-v1.0.0
-              </option>
-              <option value="organizations_schema-v1.0.0">
-                organizations_schema-v1.0.0
-              </option>
+              {schemas?.map(s => (
+                <option
+                  className="text-sm mb-1 border-gray-50 py-0 px-2"
+                  value={s}
+                  key={s}
+                >
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -102,9 +106,15 @@ export default function Home({ data }) {
 export async function getStaticProps(context) {
   const res = await fetch(process.env.HOST + '/api/profiles')
   const json = await res.json()
+
+  const cdnRes = await fetch(process.env.CDN_URL)
+  const cdnJson = await cdnRes.json()
   return {
     props: {
-      data: json?.profiles
+      data: {
+        profiles: json?.profiles,
+        schemas: cdnJson?.schema_list
+      }
     }
   }
 }
