@@ -12,12 +12,6 @@ export default async function handler(req, res) {
 
   const client = await clientPromise
   const db = client.db('mapdata')
-  let doc = await db.collection('profiles').find(queries)?.toArray()
+  let doc = await db.collection('profiles').find(queries)?.limit(100).toArray()
   res.status(200).json(doc)
-}
-
-export const config = {
-  api: {
-    responseLimit: '20mb'
-  }
 }
