@@ -15,3 +15,9 @@ export default async function handler(req, res) {
   let doc = await db.collection('profiles').find(queries)?.toArray()
   res.status(200).json(doc)
 }
+
+export const config = {
+  api: {
+    responseLimit: '20mb'
+  }
+}
