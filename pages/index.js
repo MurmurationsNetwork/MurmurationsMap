@@ -4,26 +4,44 @@ import { useEffect, useState } from 'react'
 
 const DEFAULT_CENTER = [48.864716, 2.349014]
 
+async function fetchData(params, count) {
+  let res = await fetch('/api/profiles?' + params + 'skip=' + count)
+  return await res.json()
+}
+
+async function fetchProfileSize(params) {
+  let res = await fetch('/api/size?' + params)
+  return await res.json()
+}
+
 export default function Home({ schemas }) {
   const [profiles, setProfiles] = useState([])
-  const [isLoading, setLoading] = useState(false)
   const [schema, setSchema] = useState('')
   const [tags, setTags] = useState('')
+  const [count, setCount] = useState(0)
+  const [params, setParams] = useState('')
+  const [profileSize, setProfileSize] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  if (count === 0) {
+    fetchProfileSize(params).then(data => {
+      setProfileSize(data)
+    })
+  }
 
   useEffect(() => {
     setLoading(true)
-    fetch('/api/profiles')
-      .then(res => res.json())
-      .then(data => {
-        setProfiles(data)
-        setLoading(false)
-      })
-  }, [])
-
-  if (isLoading)
-    return (
-      <h1>Map is Loading...It takes a while for the first time loading!</h1>
-    )
+    if (count >= profileSize) {
+      setLoading(false)
+      return
+    }
+    fetchData(params, count).then(data => {
+      if (data.length !== 0) {
+        setProfiles(profiles.concat(data))
+        setCount(count + data.length)
+      }
+    })
+  }, [count, params, profileSize, profiles])
 
   const handleSubmit = async event => {
     // Stop the form from submitting and refreshing the page.
@@ -34,20 +52,17 @@ export default function Home({ schemas }) {
       tags: event.target.tags.value
     }
 
-    console.log('data', data)
-
     let getParams = ''
     if (data.schema !== '') {
       getParams += 'schema=' + data.schema + '&'
     }
     if (data.tags !== '') {
-      getParams += 'tags=' + data.tags
+      getParams += 'tags=' + data.tags + '&'
     }
 
-    const res = await fetch('/api/profiles?' + getParams)
-    const json = await res.json()
-
-    setProfiles(json)
+    setCount(0)
+    setProfiles([])
+    setParams(getParams)
   }
 
   return (
@@ -97,29 +112,33 @@ export default function Home({ schemas }) {
           </div>
         </form>
         <div className="basis-11/12">
-          <Map className="w-full h-full" center={DEFAULT_CENTER} zoom={4}>
-            {(TileLayer, Marker, Popup, MarkerClusterGroup) => (
-              <>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <MarkerClusterGroup>
-                  {profiles.map(profile => (
-                    <Marker
-                      key={profile._id}
-                      position={[
-                        profile?.geolocation?.lat,
-                        profile?.geolocation?.lon
-                      ]}
-                    >
-                      <Popup>{profile?.primary_url}</Popup>
-                    </Marker>
-                  ))}
-                </MarkerClusterGroup>
-              </>
-            )}
-          </Map>
+          {loading ? (
+            <h2 className="text-center">Map is drawing...</h2>
+          ) : (
+            <Map className="w-full h-full" center={DEFAULT_CENTER} zoom={4}>
+              {(TileLayer, Marker, Popup, MarkerClusterGroup) => (
+                <>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <MarkerClusterGroup>
+                    {profiles.map(profile => (
+                      <Marker
+                        key={profile._id}
+                        position={[
+                          profile?.geolocation?.lat,
+                          profile?.geolocation?.lon
+                        ]}
+                      >
+                        <Popup>{profile?.primary_url}</Popup>
+                      </Marker>
+                    ))}
+                  </MarkerClusterGroup>
+                </>
+              )}
+            </Map>
+          )}
         </div>
       </div>
     </div>
