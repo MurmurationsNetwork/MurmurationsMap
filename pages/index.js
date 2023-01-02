@@ -1,47 +1,28 @@
 import Head from 'next/head'
 import Map from '../components/map'
 import { useEffect, useState } from 'react'
+import {loadSchemas} from "../libs/load-schemas";
+import {loadProfiles} from "../libs/load-profiles";
 
 const DEFAULT_CENTER = [48.864716, 2.349014]
-
-async function fetchData(params, count) {
-  let res = await fetch('/api/profiles?' + params + 'skip=' + count)
-  return await res.json()
-}
-
-async function fetchProfileSize(params) {
-  let res = await fetch('/api/size?' + params)
-  return await res.json()
-}
 
 export default function Home({ schemas }) {
   const [profiles, setProfiles] = useState([])
   const [schema, setSchema] = useState('')
   const [tags, setTags] = useState('')
-  const [count, setCount] = useState(0)
   const [params, setParams] = useState('')
-  const [profileSize, setProfileSize] = useState(0)
   const [loading, setLoading] = useState(false)
-
-  if (count === 0) {
-    fetchProfileSize(params).then(data => {
-      setProfileSize(data)
-    })
-  }
 
   useEffect(() => {
     setLoading(true)
-    if (count >= profileSize) {
-      setLoading(false)
-      return
-    }
-    fetchData(params, count).then(data => {
-      if (data.length !== 0) {
-        setProfiles(profiles.concat(data))
-        setCount(count + data.length)
+    loadProfiles(params).then(data => {
+      if (data?.length !== 0) {
+        setProfiles(data)
+        setLoading(false)
       }
     })
-  }, [count, params, profileSize, profiles])
+  }, [params])
+
 
   const handleSubmit = async event => {
     // Stop the form from submitting and refreshing the page.
@@ -60,7 +41,6 @@ export default function Home({ schemas }) {
       getParams += 'tags=' + data.tags + '&'
     }
 
-    setCount(0)
     setProfiles([])
     setParams(getParams)
   }
@@ -123,7 +103,7 @@ export default function Home({ schemas }) {
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   />
                   <MarkerClusterGroup>
-                    {profiles.map(profile => (
+                    {profiles?.map(profile => (
                       <Marker
                         key={profile._id}
                         position={[
@@ -146,12 +126,11 @@ export default function Home({ schemas }) {
 }
 
 export async function getStaticProps(context) {
-  const res = await fetch(process.env.CDN_URL)
-  const json = await res.json()
+  const schemas = await loadSchemas()
 
   return {
     props: {
-      schemas: json?.schema_list
+      schemas: schemas?.schema_list
     }
   }
 }
