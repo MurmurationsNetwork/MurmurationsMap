@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Map from '../components/map'
 import { useEffect, useState } from 'react'
-import {loadSchemas} from "../libs/load-schemas";
-import {loadProfile, loadProfiles} from "../libs/load-profiles";
+import { loadSchemas } from '../libs/load-schemas'
+import { loadProfile, loadProfiles } from '../libs/load-profiles'
 
 const DEFAULT_CENTER = [48.864716, 2.349014]
 
@@ -10,19 +10,23 @@ export default function Home({ schemas }) {
   const [profiles, setProfiles] = useState([])
   const [params, setParams] = useState('')
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
   const [primaryUrl, setPrimaryUrl] = useState('')
   const [tags, setTags] = useState('')
 
   useEffect(() => {
     setLoading(true)
+    setMessage('')
     loadProfiles(params).then(data => {
       if (data.data?.length !== 0) {
         setProfiles(data.data)
         setLoading(false)
       }
+      if (data?.meta?.message) {
+        setMessage(data.meta.message)
+      }
     })
   }, [params])
-
 
   const handleSubmit = async event => {
     // Stop the form from submitting and refreshing the page.
@@ -101,18 +105,18 @@ export default function Home({ schemas }) {
           </div>
           <div>
             <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="primary_url"
-                name="primary_url"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              placeholder="primary_url"
+              name="primary_url"
             />
           </div>
           <div>
             <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="last_updated search"
-                type="datetime-local"
-                name="last_updated"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="last_updated search"
+              type="datetime-local"
+              name="last_updated"
             />
           </div>
           <div>
@@ -125,6 +129,7 @@ export default function Home({ schemas }) {
           </div>
         </form>
         <div className="basis-11/12">
+          {message ? <p className="text-center text-red-500">{message}</p> : ''}
           {loading ? (
             <h2 className="text-center">Map is drawing...</h2>
           ) : (
@@ -139,14 +144,11 @@ export default function Home({ schemas }) {
                     {profiles?.map(profile => (
                       <Marker
                         key={profile[2]}
-                        position={[
-                          profile[1],
-                          profile[0]
-                        ]}
+                        position={[profile[1], profile[0]]}
                         eventHandlers={{
                           click: async () => {
                             await markerClicked(profile[2])
-                          },
+                          }
                         }}
                       >
                         <Popup>primary_url: {primaryUrl}</Popup>
