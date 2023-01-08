@@ -20,8 +20,12 @@ export default function Home({ schemas }) {
     loadProfiles(params).then(data => {
       if (data.data?.length !== 0) {
         setProfiles(data.data)
-        setLoading(false)
+      } else {
+        setMessage(
+          'There were no results for your search query. Please try again with other search parameters.'
+        )
       }
+      setLoading(false)
       if (data?.meta?.message) {
         setMessage(data.meta.message)
       }
