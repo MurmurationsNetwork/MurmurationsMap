@@ -11,6 +11,8 @@ export default function Home({ schemas }) {
   const [params, setParams] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [schema, setSchema] = useState('')
+  const [region, setRegion] = useState('')
   const [primaryUrl, setPrimaryUrl] = useState('')
   const [tags, setTags] = useState('')
 
@@ -63,9 +65,13 @@ export default function Home({ schemas }) {
   }
 
   const markerClicked = async profileUrl => {
+    setSchema('loading...')
+    setRegion('loading...')
     setPrimaryUrl('loading...')
     setTags('loading...')
     const res = await loadProfile(profileUrl)
+    setSchema(res?.linked_schemas)
+    setRegion(res?.region)
     setPrimaryUrl(res?.primary_url)
     setTags(res?.tags)
   }
@@ -155,7 +161,12 @@ export default function Home({ schemas }) {
                           }
                         }}
                       >
-                        <Popup>primary_url: {primaryUrl}</Popup>
+                        <Popup>
+                          {schema ? <p>schema: {schema}</p> : ''}
+                          {region ? <p>region: {region}</p> : ''}
+                          {primaryUrl ? <p>primary_url: {primaryUrl}</p> : ''}
+                          {tags ? <p>tags: {tags}</p> : ''}
+                        </Popup>
                       </Marker>
                     ))}
                   </MarkerClusterGroup>
