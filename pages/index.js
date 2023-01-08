@@ -164,7 +164,20 @@ export default function Home({ schemas }) {
                         <Popup>
                           {schema ? <p>schema: {schema}</p> : ''}
                           {region ? <p>region: {region}</p> : ''}
-                          {primaryUrl ? <p>primary_url: {primaryUrl}</p> : ''}
+                          {primaryUrl ? (
+                            <p>
+                              primary_url:{' '}
+                              <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={'https://' + primaryUrl}
+                              >
+                                {primaryUrl}
+                              </a>
+                            </p>
+                          ) : (
+                            ''
+                          )}
                           {tags ? <p>tags: {tags}</p> : ''}
                         </Popup>
                       </Marker>
