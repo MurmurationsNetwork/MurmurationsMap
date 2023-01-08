@@ -2,22 +2,22 @@ import Head from 'next/head'
 import Map from '../components/map'
 import { useEffect, useState } from 'react'
 import {loadSchemas} from "../libs/load-schemas";
-import {loadProfiles} from "../libs/load-profiles";
+import {loadProfile, loadProfiles} from "../libs/load-profiles";
 
 const DEFAULT_CENTER = [48.864716, 2.349014]
 
 export default function Home({ schemas }) {
   const [profiles, setProfiles] = useState([])
-  const [schema, setSchema] = useState('')
-  const [tags, setTags] = useState('')
   const [params, setParams] = useState('')
   const [loading, setLoading] = useState(false)
+  const [primaryUrl, setPrimaryUrl] = useState('')
+  const [tags, setTags] = useState('')
 
   useEffect(() => {
     setLoading(true)
     loadProfiles(params).then(data => {
-      if (data?.length !== 0) {
-        setProfiles(data)
+      if (data.data?.length !== 0) {
+        setProfiles(data.data)
         setLoading(false)
       }
     })
@@ -30,7 +30,9 @@ export default function Home({ schemas }) {
 
     const data = {
       schema: event.target.schema.value,
-      tags: event.target.tags.value
+      tags: event.target.tags.value,
+      primary_url: event.target.primary_url.value,
+      last_updated: event.target.last_updated.value
     }
 
     let getParams = ''
@@ -40,9 +42,24 @@ export default function Home({ schemas }) {
     if (data.tags !== '') {
       getParams += 'tags=' + data.tags + '&'
     }
+    if (data.primary_url !== '') {
+      getParams += 'primary_url=' + data.primary_url + '&'
+    }
+    if (data.last_updated !== '') {
+      const timestamp = Date.parse(data.last_updated) / 1000
+      getParams += 'last_updated=' + timestamp + '&'
+    }
 
     setProfiles([])
     setParams(getParams)
+  }
+
+  const markerClicked = async profileUrl => {
+    setPrimaryUrl('loading...')
+    setTags('loading...')
+    const res = await loadProfile(profileUrl)
+    setPrimaryUrl(res?.primary_url)
+    setTags(res?.tags)
   }
 
   return (
@@ -55,7 +72,7 @@ export default function Home({ schemas }) {
       <div className="flex flex-col h-screen">
         <form
           onSubmit={handleSubmit}
-          className="basis-1/12 flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:px-96 md:mx-24"
+          className="basis-1/12 flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:px-96"
         >
           <div>
             <select
@@ -83,6 +100,22 @@ export default function Home({ schemas }) {
             />
           </div>
           <div>
+            <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                placeholder="primary_url"
+                name="primary_url"
+            />
+          </div>
+          <div>
+            <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="last_updated search"
+                type="datetime-local"
+                name="last_updated"
+            />
+          </div>
+          <div>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
@@ -105,13 +138,18 @@ export default function Home({ schemas }) {
                   <MarkerClusterGroup>
                     {profiles?.map(profile => (
                       <Marker
-                        key={profile._id}
+                        key={profile[2]}
                         position={[
-                          profile?.geolocation?.lat,
-                          profile?.geolocation?.lon
+                          profile[1],
+                          profile[0]
                         ]}
+                        eventHandlers={{
+                          click: async () => {
+                            await markerClicked(profile[2])
+                          },
+                        }}
                       >
-                        <Popup>{profile?.primary_url}</Popup>
+                        <Popup>primary_url: {primaryUrl}</Popup>
                       </Marker>
                     ))}
                   </MarkerClusterGroup>
