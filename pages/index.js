@@ -157,7 +157,7 @@ export default function Home({ schemas }) {
                             }
                             if (data?.primary_url) {
                               content +=
-                                "<p>primary_url: <a target='_blank' rel='noreferrer' href='" +
+                                "<p>primary_url: <a target='_blank' rel='noreferrer' href='https://" +
                                 data.primary_url +
                                 "'>" +
                                 data.primary_url +
