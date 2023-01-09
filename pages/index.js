@@ -11,10 +11,6 @@ export default function Home({ schemas }) {
   const [params, setParams] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [schema, setSchema] = useState('')
-  const [region, setRegion] = useState('')
-  const [primaryUrl, setPrimaryUrl] = useState('')
-  const [tags, setTags] = useState('')
 
   useEffect(() => {
     setLoading(true)
@@ -65,15 +61,7 @@ export default function Home({ schemas }) {
   }
 
   const markerClicked = async profileUrl => {
-    setSchema('loading...')
-    setRegion('loading...')
-    setPrimaryUrl('loading...')
-    setTags('loading...')
-    const res = await loadProfile(profileUrl)
-    setSchema(res?.linked_schemas)
-    setRegion(res?.region)
-    setPrimaryUrl(res?.primary_url)
-    setTags(res?.tags)
+    return await loadProfile(profileUrl)
   }
 
   return (
@@ -156,30 +144,33 @@ export default function Home({ schemas }) {
                         key={profile[2]}
                         position={[profile[1], profile[0]]}
                         eventHandlers={{
-                          click: async () => {
-                            await markerClicked(profile[2])
+                          click: async event => {
+                            const data = await markerClicked(profile[2])
+                            let popupInfo = event.target.getPopup()
+                            let content = ''
+                            if (data?.linked_schemas) {
+                              content +=
+                                '<p>schema: ' + data.linked_schemas + '</p>'
+                            }
+                            if (data?.region) {
+                              content += '<p>region: ' + data.region + '</p>'
+                            }
+                            if (data?.primary_url) {
+                              content +=
+                                "<p>primary_url: <a target='_blank' rel='noreferrer' href='" +
+                                data.primary_url +
+                                "'>" +
+                                data.primary_url +
+                                '</a></p>'
+                            }
+                            if (data?.tags) {
+                              content += '<p>tags: ' + data.tags + '</p>'
+                            }
+                            popupInfo.setContent(content)
                           }
                         }}
                       >
-                        <Popup>
-                          {schema ? <p>schema: {schema}</p> : ''}
-                          {region ? <p>region: {region}</p> : ''}
-                          {primaryUrl ? (
-                            <p>
-                              primary_url:{' '}
-                              <a
-                                target="_blank"
-                                rel="noreferrer"
-                                href={'https://' + primaryUrl}
-                              >
-                                {primaryUrl}
-                              </a>
-                            </p>
-                          ) : (
-                            ''
-                          )}
-                          {tags ? <p>tags: {tags}</p> : ''}
-                        </Popup>
+                        <Popup></Popup>
                       </Marker>
                     ))}
                   </MarkerClusterGroup>
