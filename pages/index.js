@@ -148,23 +148,36 @@ export default function Home({ schemas }) {
                             const data = await markerClicked(profile[2])
                             let popupInfo = event.target.getPopup()
                             let content = ''
-                            if (data?.linked_schemas) {
+                            if (data?.profile_url) {
                               content +=
-                                '<p>schema: ' + data.linked_schemas + '</p>'
-                            }
-                            if (data?.region) {
-                              content += '<p>region: ' + data.region + '</p>'
+                                "<p class='truncate'>Source: <a target='_blank' rel='noreferrer' href='" +
+                                data.profile_url +
+                                "'>" +
+                                data.profile_url +
+                                '</a></p>'
                             }
                             if (data?.primary_url) {
                               content +=
-                                "<p>primary_url: <a target='_blank' rel='noreferrer' href='https://" +
+                                "<p>Primary URL: <a target='_blank' rel='noreferrer' href='https://" +
                                 data.primary_url +
                                 "'>" +
                                 data.primary_url +
                                 '</a></p>'
                             }
                             if (data?.tags) {
-                              content += '<p>tags: ' + data.tags + '</p>'
+                              // content += '<p>tags: ' + data.tags + '</p>'
+                              content +=
+                                '<div>Tags:</div><div class="flex flex-wrap">'
+                              {
+                                data.tags.map(tag => {
+                                  content +=
+                                    '<span class="bg-red-500 text-white font-bold py-1 px-2 m-1 rounded">' +
+                                    tag +
+                                    '</span>' +
+                                    ' '
+                                })
+                              }
+                              content += '</div>'
                             }
                             popupInfo.setContent(content)
                           }
