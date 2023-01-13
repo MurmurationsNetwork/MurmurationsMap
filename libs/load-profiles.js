@@ -2,11 +2,13 @@ export async function loadProfiles(params) {
   let hasTag = params.includes('tags')
   if (hasTag) {
     const res = await fetch(
-      process.env.INDEX_URL + '?page_size=10000&' + params
+      process.env.INDEX_URL + '?page_size=10000&status=posted&' + params
     )
     return await res.json()
   }
-  const res = await fetch(process.env.API_URL + '/profiles?' + params)
+  const res = await fetch(
+    process.env.API_URL + '/profiles?status=posted&' + params
+  )
   return await res.json()
 }
 
