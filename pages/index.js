@@ -148,17 +148,9 @@ export default function Home({ schemas }) {
                             const data = await markerClicked(profile[2])
                             let popupInfo = event.target.getPopup()
                             let content = ''
-                            if (data?.profile_url) {
-                              content +=
-                                "<p class='truncate'>Source: <a target='_blank' rel='noreferrer' href='" +
-                                data.profile_url +
-                                "'>" +
-                                data.profile_url +
-                                '</a></p>'
-                            }
                             if (data?.primary_url) {
                               content +=
-                                "<p>Primary URL: <a target='_blank' rel='noreferrer' href='https://" +
+                                "<p>URL: <a target='_blank' rel='noreferrer' href='https://" +
                                 data.primary_url +
                                 "'>" +
                                 data.primary_url +
@@ -178,6 +170,14 @@ export default function Home({ schemas }) {
                                 })
                               }
                               content += '</div>'
+                            }
+                            if (data?.profile_url) {
+                              content +=
+                                "<p class='truncate'>Source: <a target='_blank' rel='noreferrer' href='" +
+                                data.profile_url +
+                                "'>" +
+                                data.profile_url +
+                                '</a></p>'
                             }
                             popupInfo.setContent(content)
                           }
