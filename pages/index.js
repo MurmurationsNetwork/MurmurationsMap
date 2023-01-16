@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import Map from '../components/map'
 import { useEffect, useState } from 'react'
 import { loadSchemas } from '../libs/load-schemas'
@@ -72,60 +73,84 @@ export default function Home({ schemas }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col h-screen">
-        <form
-          onSubmit={handleSubmit}
-          className="basis-1/12 flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:px-96"
-        >
-          <div>
-            <select
-              className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              name="schema"
+        <div className="flex flex-col md:flex-row items-center">
+          <div className="flex-auto flex flex-row items-center">
+            <Image
+              src="/murmurations-logo.png"
+              alt="Murmurations Map"
+              width={50}
+              height={50}
+            />
+            <h1 className="contents md:hidden xl:contents font-semibold">
+              Murmurations Map
+            </h1>
+          </div>
+          <div className="flex-initial shrink">
+            <form
+              onSubmit={handleSubmit}
+              className="flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:pr-16"
             >
-              <option value="">All schemas</option>
-              {schemas?.map(s => (
-                <option
-                  className="text-sm mb-1 border-gray-50 py-0 px-2"
-                  value={s}
-                  key={s}
+              <div className="py-1 md:px-1">
+                <select
+                  className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                  name="schema"
                 >
-                  {s}
-                </option>
-              ))}
-            </select>
+                  <option value="">All schemas</option>
+                  {schemas?.map(s => (
+                    <option
+                      className="text-sm mb-1 border-gray-50 py-0 px-2"
+                      value={s}
+                      key={s}
+                    >
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="py-1 md:px-1">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  type="text"
+                  placeholder="Tags"
+                  name="tags"
+                />
+              </div>
+              <div className="py-1 md:px-1">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  type="text"
+                  placeholder="primary_url"
+                  name="primary_url"
+                />
+              </div>
+              <div className="py-1 md:px-1">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="last_updated search"
+                  type="datetime-local"
+                  name="last_updated"
+                />
+              </div>
+              <div className="py-1 md:px-1">
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  type="submit"
+                >
+                  Filter
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="Tags"
-              name="tags"
-            />
-          </div>
-          <div>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="primary_url"
-              name="primary_url"
-            />
-          </div>
-          <div>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="last_updated search"
-              type="datetime-local"
-              name="last_updated"
-            />
-          </div>
-          <div>
-            <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
+          <div className="flex-auto text-blue-500">
+            <a
+              href="https://docs.murmurations.network/guides/map.html"
+              target="_blank"
+              rel="noreferrer"
             >
-              Filter
-            </button>
+              Map Help
+            </a>
           </div>
-        </form>
+        </div>
         <div className="basis-11/12">
           {message ? <p className="text-center text-red-500">{message}</p> : ''}
           {loading ? (
@@ -148,17 +173,9 @@ export default function Home({ schemas }) {
                             const data = await markerClicked(profile[2])
                             let popupInfo = event.target.getPopup()
                             let content = ''
-                            if (data?.profile_url) {
-                              content +=
-                                "<p class='truncate'>Source: <a target='_blank' rel='noreferrer' href='" +
-                                data.profile_url +
-                                "'>" +
-                                data.profile_url +
-                                '</a></p>'
-                            }
                             if (data?.primary_url) {
                               content +=
-                                "<p>Primary URL: <a target='_blank' rel='noreferrer' href='https://" +
+                                "<p>URL: <a target='_blank' rel='noreferrer' href='https://" +
                                 data.primary_url +
                                 "'>" +
                                 data.primary_url +
@@ -178,6 +195,14 @@ export default function Home({ schemas }) {
                                 })
                               }
                               content += '</div>'
+                            }
+                            if (data?.profile_url) {
+                              content +=
+                                "<p class='truncate'>Source: <a target='_blank' rel='noreferrer' href='" +
+                                data.profile_url +
+                                "'>" +
+                                data.profile_url +
+                                '</a></p>'
                             }
                             popupInfo.setContent(content)
                           }
