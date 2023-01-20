@@ -1,33 +1,16 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+node_modules
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+.cache
+.env
+.vercel
+.output
 
-# testing
-/coverage
+/build/
+/public/build
+/api/index.js
+/api/index.js.map
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# IDE files
 .idea
+
+/app/styles/tailwind.css
+.DS_Store
