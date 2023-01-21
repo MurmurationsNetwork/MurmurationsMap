@@ -158,7 +158,7 @@ export default function Index() {
           </div>
         </div>
         <div className="basis-11/12">
-          {profiles.length === 0 ? (
+          {profiles?.length === 0 ? (
             <p className="text-center text-red-500">
               There were no results for your search query. Please try again with
               other search parameters.
@@ -211,8 +211,7 @@ function getParams(searchParams) {
     getParams += "primary_url=" + searchParams.get("primary_url") + "&";
   }
   if (searchParams.get("last_updated")) {
-    const timestamp = Date.parse(searchParams.get("last_updated")) / 1000;
-    getParams += "last_updated=" + timestamp + "&";
+    getParams += "last_updated=" + searchParams.get("last_updated") + "&";
   }
   if (
     searchParams.get("tags_exact") === "true" ||
