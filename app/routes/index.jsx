@@ -171,7 +171,9 @@ export default function Index() {
             ""
           )}
           <ClientOnly
-            fallback={<h2 className="text-center">Map is drawing...</h2>}
+            fallback={
+              <h2 className="text-center">Map is loading and rendering...</h2>
+            }
           >
             {() => <Map profiles={profiles} lat={lat} lon={lon} zoom={zoom} />}
           </ClientOnly>
