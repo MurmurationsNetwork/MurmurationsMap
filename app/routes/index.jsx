@@ -28,7 +28,9 @@ export default function Index() {
   const schema = searchParams.get("schema");
   const tags = searchParams.get("tags");
   const primaryUrl = searchParams.get("primary_url");
-  const lastUpdated = searchParams.get("last_updated");
+  const lastUpdated = new Date(searchParams.get("last_updated") * 1000)
+    .toISOString()
+    .slice(0, -5);
 
   // leaflet parameters
   const lat = searchParams.get("lat");
@@ -85,7 +87,7 @@ export default function Index() {
                 ) {
                   searchParams.set(
                     "last_updated",
-                    event.target.last_updated.value
+                    Date.parse(event.target.last_updated.value) / 1000
                   );
                 }
                 const getParameters = getParams(searchParams);
@@ -211,7 +213,8 @@ function getParams(searchParams) {
     getParams += "primary_url=" + searchParams.get("primary_url") + "&";
   }
   if (searchParams.get("last_updated")) {
-    getParams += "last_updated=" + searchParams.get("last_updated") + "&";
+    const timestamp = searchParams.get("last_updated");
+    getParams += "last_updated=" + timestamp + "&";
   }
   if (
     searchParams.get("tags_exact") === "true" ||
