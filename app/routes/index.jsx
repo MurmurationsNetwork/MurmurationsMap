@@ -28,7 +28,11 @@ export default function Index() {
   const schema = searchParams.get("schema");
   const tags = searchParams.get("tags");
   const primaryUrl = searchParams.get("primary_url");
-  const lastUpdated = searchParams.get("last_updated");
+  const lastUpdated = searchParams.get("last_updated")
+    ? new Date(searchParams.get("last_updated") * 1000)
+        .toISOString()
+        .slice(0, -5)
+    : null;
 
   // leaflet parameters
   const lat = searchParams.get("lat");
@@ -44,12 +48,12 @@ export default function Index() {
           <div className="flex-auto flex flex-row items-center">
             <img
               src="/murmurations-logo.png"
-              alt="Murmurations Index"
+              alt="Murmurations Map"
               width={50}
               height={50}
             />
             <h1 className="contents md:hidden xl:contents font-semibold">
-              Murmurations Index
+              Murmurations Map
             </h1>
           </div>
           <div className="flex-initial shrink">
@@ -85,7 +89,7 @@ export default function Index() {
                 ) {
                   searchParams.set(
                     "last_updated",
-                    event.target.last_updated.value
+                    Date.parse(event.target.last_updated.value) / 1000
                   );
                 }
                 const getParameters = getParams(searchParams);
@@ -153,12 +157,12 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
             >
-              Index Help
+              Map Help
             </a>
           </div>
         </div>
         <div className="basis-11/12">
-          {profiles.length === 0 ? (
+          {profiles?.length === 0 ? (
             <p className="text-center text-red-500">
               There were no results for your search query. Please try again with
               other search parameters.
@@ -211,7 +215,7 @@ function getParams(searchParams) {
     getParams += "primary_url=" + searchParams.get("primary_url") + "&";
   }
   if (searchParams.get("last_updated")) {
-    const timestamp = Date.parse(searchParams.get("last_updated")) / 1000;
+    const timestamp = searchParams.get("last_updated");
     getParams += "last_updated=" + timestamp + "&";
   }
   if (
