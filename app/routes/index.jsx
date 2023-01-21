@@ -28,9 +28,11 @@ export default function Index() {
   const schema = searchParams.get("schema");
   const tags = searchParams.get("tags");
   const primaryUrl = searchParams.get("primary_url");
-  const lastUpdated = new Date(searchParams.get("last_updated") * 1000)
-    .toISOString()
-    .slice(0, -5);
+  const lastUpdated = searchParams.get("last_updated")
+    ? new Date(searchParams.get("last_updated") * 1000)
+        .toISOString()
+        .slice(0, -5)
+    : null;
 
   // leaflet parameters
   const lat = searchParams.get("lat");
