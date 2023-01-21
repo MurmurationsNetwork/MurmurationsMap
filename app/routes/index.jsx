@@ -215,8 +215,7 @@ function getParams(searchParams) {
     getParams += "primary_url=" + searchParams.get("primary_url") + "&";
   }
   if (searchParams.get("last_updated")) {
-    const timestamp = searchParams.get("last_updated");
-    getParams += "last_updated=" + timestamp + "&";
+    getParams += "last_updated=" + searchParams.get("last_updated") + "&";
   }
   if (
     searchParams.get("tags_exact") === "true" ||
