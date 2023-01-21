@@ -44,12 +44,12 @@ export default function Index() {
           <div className="flex-auto flex flex-row items-center">
             <img
               src="/murmurations-logo.png"
-              alt="Murmurations Index"
+              alt="Murmurations Map"
               width={50}
               height={50}
             />
             <h1 className="contents md:hidden xl:contents font-semibold">
-              Murmurations Index
+              Murmurations Map
             </h1>
           </div>
           <div className="flex-initial shrink">
@@ -153,7 +153,7 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
             >
-              Index Help
+              Map Help
             </a>
           </div>
         </div>

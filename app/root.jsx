@@ -15,8 +15,8 @@ export const links = () => [{ rel: "stylesheet", href: styles }];
 
 export const meta = () => ({
   charset: "utf-8",
-  title: "Murmurations Map App",
-  description: "Murmurations Map App",
+  title: "Murmurations Map",
+  description: "Murmurations - Making Movements Visible",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -56,7 +56,7 @@ export function ErrorBoundary({ error }) {
   return (
     <html>
       <head>
-        <title>MapRemix - Fatal Error</title>
+        <title>Murmurations Map - Fatal Error</title>
         <Meta />
         <Links />
       </head>
