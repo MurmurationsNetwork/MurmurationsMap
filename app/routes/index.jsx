@@ -103,15 +103,22 @@ export default function Index() {
                   defaultValue={schema}
                 >
                   <option value="">All schemas</option>
-                  {schemas?.map((s) => (
-                    <option
-                      className="text-sm mb-1 border-gray-50 py-0 px-2"
-                      value={s}
-                      key={s}
-                    >
-                      {s}
-                    </option>
-                  ))}
+                  {schemas
+                    ?.filter((s) => {
+                      return !s.startsWith("test_schema-v");
+                    })
+                    .filter((s) => {
+                      return !s.startsWith("default-v");
+                    })
+                    .map((s) => (
+                      <option
+                        className="text-sm mb-1 border-gray-50 py-0 px-2"
+                        value={s}
+                        key={s}
+                      >
+                        {s}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="py-1 md:px-1">
