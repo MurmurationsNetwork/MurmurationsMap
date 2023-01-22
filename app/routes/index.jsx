@@ -103,15 +103,22 @@ export default function Index() {
                   defaultValue={schema}
                 >
                   <option value="">All schemas</option>
-                  {schemas?.map((s) => (
-                    <option
-                      className="text-sm mb-1 border-gray-50 py-0 px-2"
-                      value={s}
-                      key={s}
-                    >
-                      {s}
-                    </option>
-                  ))}
+                  {schemas
+                    ?.filter((s) => {
+                      return !s.startsWith("test_schema-v");
+                    })
+                    .filter((s) => {
+                      return !s.startsWith("default-v");
+                    })
+                    .map((s) => (
+                      <option
+                        className="text-sm mb-1 border-gray-50 py-0 px-2"
+                        value={s}
+                        key={s}
+                      >
+                        {s}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="py-1 md:px-1">
@@ -171,7 +178,9 @@ export default function Index() {
             ""
           )}
           <ClientOnly
-            fallback={<h2 className="text-center">Map is drawing...</h2>}
+            fallback={
+              <h2 className="text-center">Map is loading and rendering...</h2>
+            }
           >
             {() => <Map profiles={profiles} lat={lat} lon={lon} zoom={zoom} />}
           </ClientOnly>
@@ -215,8 +224,7 @@ function getParams(searchParams) {
     getParams += "primary_url=" + searchParams.get("primary_url") + "&";
   }
   if (searchParams.get("last_updated")) {
-    const timestamp = searchParams.get("last_updated");
-    getParams += "last_updated=" + timestamp + "&";
+    getParams += "last_updated=" + searchParams.get("last_updated") + "&";
   }
   if (
     searchParams.get("tags_exact") === "true" ||
