@@ -37,6 +37,11 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <script
+          data-goatcounter="https://murmurations.goatcounter.com/count"
+          async
+          src="//gc.zgo.at/count.js"
+        ></script>{" "}
         <Outlet />
         <ScrollRestoration />
         <script
