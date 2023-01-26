@@ -238,5 +238,20 @@ function getParams(searchParams) {
   ) {
     getParams += "tags_filter=" + searchParams.get("tags_filter") + "&";
   }
+  // issue-26 lat, lon, range
+  if (
+    searchParams.get("lat") &&
+    searchParams.get("lon") &&
+    searchParams.get("range")
+  ) {
+    getParams +=
+      "lat=" +
+      searchParams.get("lat") +
+      "&lon=" +
+      searchParams.get("lon") +
+      "&range=" +
+      searchParams.get("range") +
+      "&";
+  }
   return getParams.slice(0, -1);
 }
