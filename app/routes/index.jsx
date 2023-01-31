@@ -16,6 +16,7 @@ export async function loader({ request }) {
   return json({
     schemas: schemas,
     profiles: profiles?.data,
+    origin: url?.origin,
   });
 }
 
@@ -39,7 +40,7 @@ export default function Index() {
   const lon = searchParams.get("lon");
   const zoom = searchParams.get("zoom");
   const hideSearch = searchParams.get("hide_search");
-
+  const origin = loaderData?.origin;
   const [profiles] = useState(loaderData?.profiles);
 
   return (
@@ -54,7 +55,13 @@ export default function Index() {
               height={40}
             />
             <a
-              href="https://map.murmurations.network"
+              href={
+                hideSearch === "true"
+                  ? `${origin}?${searchParams
+                      .toString()
+                      .replace("hide_search=true", "hide_search=false")}`
+                  : `${origin}`
+              }
               target="_blank"
               rel="noreferrer"
             >
