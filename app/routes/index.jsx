@@ -38,6 +38,7 @@ export default function Index() {
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
   const zoom = searchParams.get("zoom");
+  const hideSearch = searchParams.get("hide_search");
 
   const [profiles] = useState(loaderData?.profiles);
 
@@ -45,128 +46,138 @@ export default function Index() {
     <div>
       <div className="flex flex-col h-screen">
         <div className="flex flex-col md:flex-row items-center">
-          <div className="flex-auto flex flex-row items-center">
+          <div className="flex-auto flex flex-row items-center md:ml-2">
             <img
               src="/murmurations-logo.png"
               alt="Murmurations Map"
-              width={50}
-              height={50}
+              width={40}
+              height={40}
             />
-            <h1 className="contents md:hidden xl:contents font-semibold">
-              Murmurations Map
-            </h1>
-          </div>
-          <div className="flex-initial shrink">
-            <form
-              className="flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:pr-16"
-              onSubmit={(event) => {
-                event.preventDefault();
-                let searchParams = new URLSearchParams("");
-                if (
-                  event?.target?.schema?.value &&
-                  event.target.schema.value !== ""
-                ) {
-                  searchParams.set("schema", event.target.schema.value);
-                }
-                if (
-                  event?.target?.tags?.value &&
-                  event.target.tags.value !== ""
-                ) {
-                  searchParams.set("tags", event.target.tags.value);
-                }
-                if (
-                  event?.target?.primary_url?.value &&
-                  event.target.primary_url.value !== ""
-                ) {
-                  searchParams.set(
-                    "primary_url",
-                    event.target.primary_url.value
-                  );
-                }
-                if (
-                  event?.target?.last_updated?.value &&
-                  event.target.last_updated.value !== ""
-                ) {
-                  searchParams.set(
-                    "last_updated",
-                    Date.parse(event.target.last_updated.value) / 1000
-                  );
-                }
-                const getParameters = getParams(searchParams);
-                window.location.href = "?" + getParameters;
-              }}
-            >
-              <div className="py-1 md:px-1">
-                <select
-                  className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-                  name="schema"
-                  defaultValue={schema}
-                >
-                  <option value="">All schemas</option>
-                  {schemas
-                    ?.filter((s) => {
-                      return !s.startsWith("test_schema-v");
-                    })
-                    .filter((s) => {
-                      return !s.startsWith("default-v");
-                    })
-                    .map((s) => (
-                      <option
-                        className="text-sm mb-1 border-gray-50 py-0 px-2"
-                        value={s}
-                        key={s}
-                      >
-                        {s}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="py-1 md:px-1">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  placeholder="Tags"
-                  name="tags"
-                  defaultValue={tags}
-                />
-              </div>
-              <div className="py-1 md:px-1">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  placeholder="primary_url"
-                  name="primary_url"
-                  defaultValue={primaryUrl}
-                />
-              </div>
-              <div className="py-1 md:px-1">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="last_updated search"
-                  type="datetime-local"
-                  name="last_updated"
-                  defaultValue={lastUpdated}
-                />
-              </div>
-              <div className="py-1 md:px-1">
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Filter
-                </button>
-              </div>
-            </form>
-          </div>
-          <div className="flex-auto text-blue-500">
             <a
-              href="https://docs.murmurations.network/guides/map.html"
+              href="https://map.murmurations.network"
               target="_blank"
               rel="noreferrer"
             >
-              Map Help
+              <h1 className="contents md:hidden xl:contents font-semibold">
+                Murmurations Map
+              </h1>
             </a>
           </div>
+          {hideSearch === "true" ? null : (
+            <div className="flex-initial shrink">
+              <form
+                className="flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:pr-16"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  let searchParams = new URLSearchParams("");
+                  if (
+                    event?.target?.schema?.value &&
+                    event.target.schema.value !== ""
+                  ) {
+                    searchParams.set("schema", event.target.schema.value);
+                  }
+                  if (
+                    event?.target?.tags?.value &&
+                    event.target.tags.value !== ""
+                  ) {
+                    searchParams.set("tags", event.target.tags.value);
+                  }
+                  if (
+                    event?.target?.primary_url?.value &&
+                    event.target.primary_url.value !== ""
+                  ) {
+                    searchParams.set(
+                      "primary_url",
+                      event.target.primary_url.value
+                    );
+                  }
+                  if (
+                    event?.target?.last_updated?.value &&
+                    event.target.last_updated.value !== ""
+                  ) {
+                    searchParams.set(
+                      "last_updated",
+                      Date.parse(event.target.last_updated.value) / 1000
+                    );
+                  }
+                  const getParameters = getParams(searchParams);
+                  window.location.href = "?" + getParameters;
+                }}
+              >
+                <div className="py-1 md:px-1">
+                  <select
+                    className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                    name="schema"
+                    defaultValue={schema}
+                  >
+                    <option value="">All schemas</option>
+                    {schemas
+                      ?.filter((s) => {
+                        return !s.startsWith("test_schema-v");
+                      })
+                      .filter((s) => {
+                        return !s.startsWith("default-v");
+                      })
+                      .map((s) => (
+                        <option
+                          className="text-sm mb-1 border-gray-50 py-0 px-2"
+                          value={s}
+                          key={s}
+                        >
+                          {s}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="py-1 md:px-1">
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                    placeholder="Tags"
+                    name="tags"
+                    defaultValue={tags}
+                  />
+                </div>
+                <div className="py-1 md:px-1">
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                    placeholder="primary_url"
+                    name="primary_url"
+                    defaultValue={primaryUrl}
+                  />
+                </div>
+                <div className="py-1 md:px-1">
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="last_updated search"
+                    type="datetime-local"
+                    name="last_updated"
+                    defaultValue={lastUpdated}
+                  />
+                </div>
+                <div className="py-1 md:px-1">
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Filter
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+          {hideSearch === "true" ? null : (
+            <div className="flex-end md:mr-2 text-blue-500">
+              <a
+                href="https://docs.murmurations.network/guides/map.html"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Map Help
+              </a>
+            </div>
+          )}
         </div>
         <div className="basis-11/12">
           {profiles?.length === 0 ? (
