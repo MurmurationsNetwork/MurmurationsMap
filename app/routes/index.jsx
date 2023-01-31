@@ -48,13 +48,8 @@ export default function Index() {
       <div className="flex flex-col h-screen">
         <div className="flex flex-col md:flex-row items-center">
           <div className="flex-auto flex flex-row items-center md:ml-2">
-            <img
-              src="/murmurations-logo.png"
-              alt="Murmurations Map"
-              width={40}
-              height={40}
-            />
             <a
+              className="flex-auto flex flex-row"
               href={
                 hideSearch === "true"
                   ? `${origin}?${searchParams
@@ -65,6 +60,12 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
             >
+              <img
+                src="/murmurations-logo.png"
+                alt="Murmurations Map"
+                width={40}
+                height={40}
+              />
               <h1 className="contents md:hidden xl:contents font-semibold">
                 Murmurations Map
               </h1>
