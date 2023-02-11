@@ -20,16 +20,18 @@ export const meta = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export async function loader() {
+export async function loader({ request }) {
   return json({
     ENV: {
       API_URL: process.env.API_URL,
     },
+    url: new URL(request.url),
   });
 }
 
 export default function App() {
   const data = useLoaderData();
+  const production = !!data?.url?.match(/\/profiles/);
   return (
     <html lang="en">
       <head>
@@ -42,6 +44,11 @@ export default function App() {
           async
           src="//gc.zgo.at/count.js"
         ></script>{" "}
+        {production ? null : (
+          <div className="flex flex-row bg-red-200 py-1 px-2 md:py-2 md:px-4 justify-center">
+            T E S T &nbsp; E N V I R O N M E N T
+          </div>
+        )}
         <Outlet />
         <ScrollRestoration />
         <script
