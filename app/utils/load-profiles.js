@@ -8,8 +8,12 @@ export async function loadProfiles(params) {
       );
       return await res.json();
     }
+    const hasSchema = params.includes("schema");
     const res = await fetch(
-      process.env.API_URL + "/profiles?status=posted&" + params
+      process.env.API_URL +
+        "/profiles?status=posted&" +
+        (hasSchema ? "" : "schema=organizations_schema-v1.0.0") +
+        params
     );
     return await res.json();
   } catch (e) {

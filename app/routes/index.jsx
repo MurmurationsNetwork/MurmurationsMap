@@ -116,9 +116,10 @@ export default function Index() {
                   <select
                     className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
                     name="schema"
-                    defaultValue={schema}
+                    defaultValue={
+                      schema ? schema : "organizations_schema-v1.0.0"
+                    }
                   >
-                    <option value="">All schemas</option>
                     {schemas
                       ?.filter((s) => {
                         return !s.startsWith("test_schema-v");
