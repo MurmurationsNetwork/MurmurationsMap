@@ -40,7 +40,7 @@ export default function App() {
       </head>
       <body>
         <script
-          data-goatcounter="https://murmurations.goatcounter.com/count"
+          data-goatcounter="https://map-murm.goatcounter.com/count"
           async
           src="//gc.zgo.at/count.js"
         ></script>{" "}
