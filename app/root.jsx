@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from "@remix-run/react";
 
 import styles from "~/styles/tailwind.css";
@@ -13,12 +14,14 @@ import { json } from "@remix-run/node";
 
 export const links = () => [{ rel: "stylesheet", href: styles }];
 
-export const meta = () => ({
-  charset: "utf-8",
-  title: "Murmurations Map",
-  description: "Murmurations - Making Movements Visible",
-  viewport: "width=device-width,initial-scale=1",
-});
+export const meta = () => {
+  return [
+    { charset: "utf-8" },
+    { title: "Murmurations Map" },
+    { description: "Murmurations - Making Movements Visible" },
+    { viewport: "width=device-width,initial-scale=1" },
+  ];
+};
 
 export async function loader({ request }) {
   return json({
@@ -63,8 +66,10 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({ error }) {
+export function ErrorBoundary() {
+  const error = useRouteError();
   console.error(error);
+
   return (
     <html>
       <head>
@@ -78,7 +83,9 @@ export function ErrorBoundary({ error }) {
           <h1 className="text-xl font-bold mb-8">
             A fatal error has occurred and was logged.
           </h1>
-          <code className="text-lg">{error?.message}</code>
+          <code className="text-md">
+            {error instanceof Error ? error.message : JSON.stringify(error)}
+          </code>
         </div>
         <Scripts />
       </body>

@@ -2,10 +2,15 @@ import { lazy, useState } from "react";
 import { loadProfiles } from "~/utils/load-profiles";
 import { loadSchemas } from "~/utils/load-schemas";
 import { json } from "@remix-run/node";
-import { useCatch, useLoaderData, useSearchParams } from "@remix-run/react";
+import {
+  useLoaderData,
+  useRouteError,
+  useSearchParams,
+} from "@remix-run/react";
 import leafletStyles from "leaflet/dist/leaflet.css";
 import leafletClusterStyles from "@changey/react-leaflet-markercluster/dist/styles.min.css";
 import { ClientOnly } from "remix-utils";
+import HandleError from "~/components/HandleError";
 
 export async function loader({ request }) {
   const schemas = await loadSchemas();
@@ -217,19 +222,9 @@ export function links() {
   ];
 }
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  console.error(caught);
-  return (
-    <div className="container mx-auto px-4 h-screen flex items-center flex-col">
-      <span className="text-5xl mb-8">💥🤬</span>
-      <h1 className="text-xl font-bold mb-8">An error has occurred</h1>
-      <h2 className="text-lg mb-4">
-        {caught.status} - {caught.statusText}
-      </h2>
-      <code className="text-md">{caught.data}</code>
-    </div>
-  );
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return HandleError(error);
 }
 
 function getParams(searchParams) {
