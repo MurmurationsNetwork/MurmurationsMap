@@ -25,7 +25,7 @@ export async function loader({ request }) {
   });
 }
 
-export default function _index() {
+export default function Index() {
   const Map = lazy(() => import("~/components/map.client"));
 
   const loaderData = useLoaderData();
