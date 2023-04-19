@@ -50,11 +50,11 @@ export default function Index() {
 
   return (
     <div>
-      <div className="flex flex-col h-screen">
-        <div className="flex flex-col md:flex-row items-center">
-          <div className="flex-auto flex flex-row items-center md:ml-2">
+      <div className="flex h-screen flex-col">
+        <div className="flex flex-col items-center md:flex-row">
+          <div className="flex flex-auto flex-row items-center md:ml-2">
             <a
-              className="flex-auto flex flex-row"
+              className="flex flex-auto flex-row"
               href={
                 hideSearch === "true"
                   ? `${origin}?${searchParams
@@ -71,7 +71,7 @@ export default function Index() {
                 width={40}
                 height={40}
               />
-              <h1 className="contents md:hidden xl:contents font-semibold">
+              <h1 className="contents font-semibold md:hidden xl:contents">
                 Murmurations Map
               </h1>
             </a>
@@ -79,7 +79,7 @@ export default function Index() {
           {hideSearch === "true" ? null : (
             <div className="flex-initial shrink">
               <form
-                className="flex justify-center items-center flex-col text-center md:flex-row md:justify-evenly md:pr-16"
+                className="flex flex-col items-center justify-center text-center md:flex-row md:justify-evenly md:pr-16"
                 onSubmit={(event) => {
                   event.preventDefault();
                   let searchParams = new URLSearchParams("");
@@ -119,7 +119,7 @@ export default function Index() {
               >
                 <div className="py-1 md:px-1">
                   <select
-                    className="border rounded block w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                    className="focus:shadow-outline block w-full rounded border px-3 py-2 text-gray-700 focus:outline-none"
                     name="schema"
                     defaultValue={
                       schema ? schema : "organizations_schema-v1.0.0"
@@ -134,7 +134,7 @@ export default function Index() {
                       })
                       .map((s) => (
                         <option
-                          className="text-sm mb-1 border-gray-50 py-0 px-2"
+                          className="mb-1 border-gray-50 px-2 py-0 text-sm"
                           value={s}
                           key={s}
                         >
@@ -145,7 +145,7 @@ export default function Index() {
                 </div>
                 <div className="py-1 md:px-1">
                   <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                     type="text"
                     placeholder="Tags"
                     name="tags"
@@ -154,7 +154,7 @@ export default function Index() {
                 </div>
                 <div className="py-1 md:px-1">
                   <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                     type="text"
                     placeholder="primary_url"
                     name="primary_url"
@@ -163,7 +163,7 @@ export default function Index() {
                 </div>
                 <div className="py-1 md:px-1">
                   <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                     placeholder="last_updated search"
                     type="datetime-local"
                     name="last_updated"
@@ -172,7 +172,7 @@ export default function Index() {
                 </div>
                 <div className="py-1 md:px-1">
                   <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
                     type="submit"
                   >
                     Filter
@@ -182,7 +182,7 @@ export default function Index() {
             </div>
           )}
           {hideSearch === "true" ? null : (
-            <div className="flex-end md:mr-2 text-blue-500">
+            <div className="flex-end text-blue-500 md:mr-2">
               <a
                 href="https://docs.murmurations.network/guides/map.html"
                 target="_blank"

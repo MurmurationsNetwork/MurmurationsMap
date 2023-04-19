@@ -48,7 +48,7 @@ export default function App() {
           src="//gc.zgo.at/count.js"
         ></script>{" "}
         {production ? null : (
-          <div className="flex flex-row bg-red-200 py-1 px-2 md:py-2 md:px-4 justify-center">
+          <div className="flex flex-row justify-center bg-red-200 px-2 py-1 md:px-4 md:py-2">
             T E S T &nbsp; E N V I R O N M E N T
           </div>
         )}
@@ -77,10 +77,10 @@ export function ErrorBoundary() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-white dark:bg-gray-900 text-black dark:text-gray-50 leading-normal">
-        <div className="container mx-auto px-4 h-screen flex justify-center items-center flex-col">
-          <span className="text-5xl mb-8">💥😱</span>
-          <h1 className="text-xl font-bold mb-8">
+      <body className="bg-white leading-normal text-black dark:bg-gray-900 dark:text-gray-50">
+        <div className="container mx-auto flex h-screen flex-col items-center justify-center px-4">
+          <span className="mb-8 text-5xl">💥😱</span>
+          <h1 className="mb-8 text-xl font-bold">
             A fatal error has occurred and was logged.
           </h1>
           <code className="text-md">

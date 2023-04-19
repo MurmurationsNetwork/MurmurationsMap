@@ -34,7 +34,7 @@ const MapClient = ({ profiles, lat, lon, zoom }) => {
 
   return (
     <ReactLeaflet.MapContainer
-      className="w-full h-full"
+      className="h-full w-full"
       center={defaultCenter}
       zoom={defaultZoom}
     >

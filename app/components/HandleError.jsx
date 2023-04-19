@@ -5,20 +5,20 @@ export default function HandleError(error) {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <div className="container mx-auto px-4 h-screen flex items-center flex-col">
-        <span className="text-5xl mb-8">🤬</span>
-        <h1 className="text-xl font-bold mb-8">{error.status} Error</h1>
+      <div className="container mx-auto flex h-screen flex-col items-center px-4">
+        <span className="mb-8 text-5xl">🤬</span>
+        <h1 className="mb-8 text-xl font-bold">{error.status} Error</h1>
         {error.statusText ? (
-          <h2 className="text-lg mb-4">{error.statusText}</h2>
+          <h2 className="mb-4 text-lg">{error.statusText}</h2>
         ) : null}
         <code className="text-md">{error.data}</code>
       </div>
     );
   } else {
     return (
-      <div className="container mx-auto px-4 h-screen flex items-center flex-col">
-        <span className="text-5xl mb-8">😱</span>
-        <h1 className="text-xl font-bold mb-8">
+      <div className="container mx-auto flex h-screen flex-col items-center px-4">
+        <span className="mb-8 text-5xl">😱</span>
+        <h1 className="mb-8 text-xl font-bold">
           A fatal error has occurred and was logged
         </h1>
         <code className="text-md">
