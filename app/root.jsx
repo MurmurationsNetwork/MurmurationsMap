@@ -43,10 +43,14 @@ export default function App() {
       </head>
       <body>
         <script
-          data-goatcounter="https://map-murm.goatcounter.com/count"
+          data-goatcounter={
+            production
+              ? "https://stats-map.murmurations.network/count"
+              : "https://test-stats-map.murmurations.network/count"
+          }
           async
-          src="//gc.zgo.at/count.js"
-        ></script>{" "}
+          src="//stats.murmurations.network/count.js"
+        ></script>
         {production ? null : (
           <div className="flex flex-row justify-center bg-red-200 px-2 py-1 md:px-4 md:py-2">
             T E S T &nbsp; E N V I R O N M E N T

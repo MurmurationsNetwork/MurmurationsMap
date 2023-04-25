@@ -174,6 +174,13 @@ export default function Index() {
                   <button
                     className="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
                     type="submit"
+                    onClick={(e) =>
+                      window.goatcounter.count({
+                        path: (p) => p + "?filter",
+                        title: "Map filter",
+                        event: true,
+                      })
+                    }
                   >
                     Filter
                   </button>
@@ -187,6 +194,13 @@ export default function Index() {
                 href="https://docs.murmurations.network/guides/map.html"
                 target="_blank"
                 rel="noreferrer"
+                onClick={(e) =>
+                  window.goatcounter.count({
+                    path: (p) => p + "?docs",
+                    title: "Map docs",
+                    event: true,
+                  })
+                }
               >
                 Map Help
               </a>
