@@ -29,7 +29,7 @@ export default function Index() {
   const Map = lazy(() => import("~/components/map.client"));
 
   const loaderData = useLoaderData();
-  const schemas = loaderData?.schemas ? loaderData.schemas.schema_list : [];
+  const schemas = loaderData?.schemas ?? [];
   const [searchParams] = useSearchParams();
   const schema = searchParams.get("schema");
   const tags = searchParams.get("tags");

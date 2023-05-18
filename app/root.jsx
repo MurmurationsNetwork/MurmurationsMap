@@ -26,7 +26,7 @@ export const meta = () => {
 export async function loader({ request }) {
   return json({
     ENV: {
-      API_URL: process.env.API_URL,
+      ALLOCATOR_URL: process.env.ALLOCATOR_URL,
     },
     url: new URL(request.url),
   });

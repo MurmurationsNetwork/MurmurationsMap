@@ -1,7 +1,8 @@
 export async function loadSchemas() {
   try {
-    const res = await fetch(process.env.CDN_URL);
-    return await res.json();
+    const res = await fetch(process.env.LIBRARY_URL + "/v2/schemas");
+    const schemas = await res.json();
+    return schemas?.data.map((item) => item.name);
   } catch (e) {
     throw new Response(`loadSchemas error: ${e}`, {
       status: 500,
