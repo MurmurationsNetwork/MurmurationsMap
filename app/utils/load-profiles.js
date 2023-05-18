@@ -4,13 +4,15 @@ export async function loadProfiles(params) {
     const hasRange = params.includes("range");
     if (hasTags || hasRange) {
       const res = await fetch(
-        process.env.INDEX_URL + "?page_size=10000&status=posted&" + params
+        process.env.INDEX_URL +
+          "/v2/get-nodes?page_size=10000&status=posted&" +
+          params
       );
       return await res.json();
     }
     const hasSchema = params.includes("schema");
     const res = await fetch(
-      process.env.API_URL +
+      process.env.ALLOCATOR_URL +
         "/profiles?status=posted&" +
         (hasSchema ? "" : "schema=organizations_schema-v1.0.0") +
         params
@@ -26,7 +28,7 @@ export async function loadProfiles(params) {
 export async function loadProfile(profileUrl) {
   try {
     const res = await fetch(
-      window.ENV.API_URL + "/profile?profile_url=" + profileUrl
+      window.ENV.ALLOCATOR_URL + "/profile?profile_url=" + profileUrl
     );
     return await res.json();
   } catch (e) {
