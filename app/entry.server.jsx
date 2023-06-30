@@ -12,6 +12,7 @@ export default function handleRequest(
   );
 
   responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set("Cache-Control", "s-maxage=30");
 
   return new Response("<!DOCTYPE html>" + markup, {
     headers: responseHeaders,

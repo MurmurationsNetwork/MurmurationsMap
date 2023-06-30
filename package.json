@@ -11,7 +11,8 @@
     "generate:css": "npx tailwindcss -i styles/tailwind.css -o ./app/styles/tailwind.css",
     "start": "remix-serve build",
     "lint": "eslint --fix",
-    "pretty": "prettier --write .",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|json)\"",
+    "format": "npm run prettier -- --write",
     "prepare": "husky install"
   },
   "dependencies": {

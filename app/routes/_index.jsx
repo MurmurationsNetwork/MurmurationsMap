@@ -12,6 +12,12 @@ import leafletClusterStyles from "@changey/react-leaflet-markercluster/dist/styl
 import { ClientOnly } from "remix-utils";
 import HandleError from "~/components/HandleError";
 
+export function headers() {
+  return {
+    "Cache-Control": "maxage=30, stale-while-revalidate=60",
+  };
+}
+
 export async function loader({ request }) {
   const schemas = await loadSchemas();
   const url = new URL(request.url);
