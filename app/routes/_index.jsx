@@ -28,6 +28,7 @@ export default function Index() {
   const schemas = loaderData?.schemas ?? []
   const [searchParams] = useSearchParams()
   const schema = searchParams.get('schema')
+  const name = searchParams.get('name')
   const tags = searchParams.get('tags')
   const primaryUrl = searchParams.get('primary_url')
   const lastUpdated = searchParams.get('last_updated')
@@ -86,6 +87,12 @@ export default function Index() {
                     searchParams.set('schema', event.target.schema.value)
                   }
                   if (
+                    event?.target?.name?.value &&
+                    event.target.name.value !== ''
+                  ) {
+                    searchParams.set('name', event.target.name.value)
+                  }
+                  if (
                     event?.target?.tags?.value &&
                     event.target.tags.value !== ''
                   ) {
@@ -138,6 +145,15 @@ export default function Index() {
                         </option>
                       ))}
                   </select>
+                </div>
+                <div className="py-1 md:px-1">
+                  <input
+                    className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                    type="text"
+                    placeholder="Name"
+                    name="name"
+                    defaultValue={name}
+                  />
                 </div>
                 <div className="py-1 md:px-1">
                   <input
@@ -241,6 +257,9 @@ function getParams(searchParams) {
   let getParams = ''
   if (searchParams.get('schema')) {
     getParams += 'schema=' + searchParams.get('schema') + '&'
+  }
+  if (searchParams.get('name')) {
+    getParams += 'name=' + searchParams.get('name') + '&'
   }
   if (searchParams.get('tags')) {
     getParams += 'tags=' + searchParams.get('tags') + '&'

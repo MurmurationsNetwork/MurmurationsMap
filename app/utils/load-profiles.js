@@ -1,8 +1,9 @@
 export async function loadProfiles(params) {
   try {
+    const hasName = params.includes('name')
     const hasTags = params.includes('tags')
     const hasRange = params.includes('range')
-    if (hasTags || hasRange) {
+    if (hasName || hasTags || hasRange) {
       const res = await fetch(
         process.env.INDEX_URL +
           '/v2/get-nodes?page_size=10000&status=posted&' +
