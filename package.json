@@ -45,6 +45,7 @@
     "@remix-run/dev": "^1.18.1",
     "@remix-run/eslint-config": "^1.18.1",
     "@remix-run/serve": "^1.18.1",
+    "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
