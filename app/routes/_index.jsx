@@ -117,7 +117,7 @@ export default function Index() {
                     )
                   }
                   const getParameters = getParams(searchParams)
-                  window.location.href = '?' + getParameters
+                  window.location.search = '?' + getParameters
                 }}
               >
                 <div className="py-1 md:px-1">
