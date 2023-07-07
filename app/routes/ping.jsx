@@ -1,3 +1,3 @@
 export async function loader() {
-  return new Response("pong!");
+  return new Response('pong!')
 }

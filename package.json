@@ -1,6 +1,8 @@
 {
+  "name": "murmurations-map",
+  "version": "1.0.0",
+  "license": "GPLv3",
   "private": true,
-  "sideEffects": false,
   "scripts": {
     "build": "run-s \"build:*\"",
     "build:css": "npm run generate:css -- --minify",
@@ -8,11 +10,24 @@
     "dev": "run-p \"dev:*\"",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
-    "generate:css": "npx tailwindcss -i styles/tailwind.css -o ./app/styles/tailwind.css",
+    "generate:css": "npx tailwindcss -i styles/app.css -o ./app/styles/app.css",
     "start": "remix-serve build",
-    "lint": "eslint --fix",
-    "pretty": "prettier --write .",
+    "lint": "eslint --ignore-path .gitignore --ext .js --ext .jsx .",
+    "lint-fix": "eslint --ignore-path .gitignore --ext .js --ext .jsx . --fix",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|json)\"",
+    "format": "npm run prettier -- --write",
     "prepare": "husky install"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint-config-prettier"
+    ]
+  },
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "npm run lint-fix",
+      "npm run format"
+    ]
   },
   "dependencies": {
     "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
@@ -47,10 +62,5 @@
   "engines": {
     "node": ">=14"
   },
-  "lint-staged": {
-    "**/*.{js,jsx}": [
-      "npm run lint",
-      "prettier --write"
-    ]
-  }
+  "sideEffects": false
 }

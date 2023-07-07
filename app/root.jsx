@@ -6,35 +6,35 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useRouteError,
-} from "@remix-run/react";
+  useRouteError
+} from '@remix-run/react'
 
-import styles from "~/styles/tailwind.css";
-import { json } from "@remix-run/node";
+import styles from '~/styles/app.css'
+import { json } from '@remix-run/node'
 
-export const links = () => [{ rel: "stylesheet", href: styles }];
+export const links = () => [{ rel: 'stylesheet', href: styles }]
 
 export const meta = () => {
   return [
-    { charset: "utf-8" },
-    { title: "Murmurations Map" },
-    { description: "Murmurations - Making Movements Visible" },
-    { viewport: "width=device-width,initial-scale=1" },
-  ];
-};
+    { charset: 'utf-8' },
+    { title: 'Murmurations Map' },
+    { description: 'Murmurations - Making Movements Visible' },
+    { viewport: 'width=device-width,initial-scale=1' }
+  ]
+}
 
 export async function loader({ request }) {
   return json({
     ENV: {
-      ALLOCATOR_URL: process.env.ALLOCATOR_URL,
+      ALLOCATOR_URL: process.env.ALLOCATOR_URL
     },
-    url: new URL(request.url),
-  });
+    url: new URL(request.url)
+  })
 }
 
 export default function App() {
-  const data = useLoaderData();
-  const production = !!data?.url?.match(/\/map/);
+  const data = useLoaderData()
+  const production = !!data?.url?.match(/\/map/)
   return (
     <html lang="en">
       <head>
@@ -45,8 +45,8 @@ export default function App() {
         <script
           data-goatcounter={
             production
-              ? "https://stats-map.murmurations.network/count"
-              : "https://test-stats-map.murmurations.network/count"
+              ? 'https://stats-map.murmurations.network/count'
+              : 'https://test-stats-map.murmurations.network/count'
           }
           async
           src="//stats.murmurations.network/count.js"
@@ -60,19 +60,19 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`
           }}
         />
         <Scripts />
         <LiveReload />
       </body>
     </html>
-  );
+  )
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
-  console.error(error);
+  const error = useRouteError()
+  console.error(error)
 
   return (
     <html>
@@ -94,5 +94,5 @@ export function ErrorBoundary() {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
