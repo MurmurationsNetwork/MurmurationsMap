@@ -1,16 +1,15 @@
-node_modules
+/.idea
+.DS_Store
 
 .cache
 .env
 .vercel
 .output
 
+/node_modules
 /build/
 /public/build
 /api/index.js
 /api/index.js.map
 
-.idea
-
-/app/styles/tailwind.css
-.DS_Store
+/app/styles/app.css

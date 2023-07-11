@@ -1,6 +1,8 @@
 {
+  "name": "murmurations-map",
+  "version": "1.0.0",
+  "license": "GPLv3",
   "private": true,
-  "sideEffects": false,
   "scripts": {
     "build": "run-s \"build:*\"",
     "build:css": "npm run generate:css -- --minify",
@@ -8,50 +10,50 @@
     "dev": "run-p \"dev:*\"",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
-    "generate:css": "npx tailwindcss -i styles/tailwind.css -o ./app/styles/tailwind.css",
+    "generate:css": "npx tailwindcss -i styles/app.css -o ./app/styles/app.css",
     "start": "remix-serve build",
-    "lint": "eslint --fix",
+    "lint": "eslint --ignore-path .gitignore --ext .js --ext .jsx .",
+    "lint-fix": "eslint --ignore-path .gitignore --ext .js --ext .jsx . --fix",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|json)\"",
     "format": "npm run prettier -- --write",
     "prepare": "husky install"
   },
+  "eslintConfig": {
+    "extends": [
+      "eslint-config-prettier"
+    ]
+  },
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "npm run lint-fix",
+      "npm run format"
+    ]
+  },
   "dependencies": {
     "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
-    "@remix-run/node": "^1.17.0",
-    "@remix-run/react": "^1.17.0",
-    "@remix-run/vercel": "^1.17.0",
-    "@vercel/node": "^2.15.1",
+    "@remix-run/react": "^1.18.1",
+    "@vercel/node": "^2.15.3",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
-    "remix-utils": "^6.3.0"
+    "remix-utils": "^6.6.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.17.0",
-    "@remix-run/eslint-config": "^1.17.0",
-    "@remix-run/serve": "^1.17.0",
-    "eslint": "^8.42.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "@remix-run/dev": "^1.18.1",
+    "@remix-run/eslint-config": "^1.18.1",
+    "@remix-run/serve": "^1.18.1",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "^13.2.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "tailwindcss": "^3.3.2"
   },
   "engines": {
     "node": ">=14"
   },
-  "lint-staged": {
-    "**/*.{js,jsx}": [
-      "npm run lint",
-      "prettier --write"
-    ]
-  }
+  "sideEffects": false
 }

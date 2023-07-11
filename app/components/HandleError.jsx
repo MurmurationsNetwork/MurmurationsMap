@@ -1,7 +1,7 @@
-import { isRouteErrorResponse } from "@remix-run/react";
+import { isRouteErrorResponse } from '@remix-run/react'
 
 export default function HandleError(error) {
-  console.log(error);
+  console.log(error)
 
   if (isRouteErrorResponse(error)) {
     return (
@@ -13,7 +13,7 @@ export default function HandleError(error) {
         ) : null}
         <code className="text-md">{error.data}</code>
       </div>
-    );
+    )
   } else {
     return (
       <div className="container mx-auto flex h-screen flex-col items-center px-4">
@@ -25,6 +25,6 @@ export default function HandleError(error) {
           {error instanceof Error ? error.message : JSON.stringify(error)}
         </code>
       </div>
-    );
+    )
   }
 }
