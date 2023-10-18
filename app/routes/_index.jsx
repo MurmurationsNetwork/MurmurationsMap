@@ -5,7 +5,7 @@ import { json } from '@remix-run/node'
 import { useLoaderData, useRouteError, useSearchParams } from '@remix-run/react'
 import leafletStyles from 'leaflet/dist/leaflet.css'
 import leafletClusterStyles from '@changey/react-leaflet-markercluster/dist/styles.min.css'
-import { ClientOnly } from 'remix-utils'
+import { ClientOnly } from 'remix-utils/client-only'
 import HandleError from '~/components/HandleError'
 
 export async function loader({ request }) {
