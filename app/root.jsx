@@ -35,6 +35,7 @@ export async function loader({ request }) {
 export default function App() {
   const data = useLoaderData()
   const production = !!data?.url?.match(/\/map/)
+
   return (
     <html lang="en">
       <head>
