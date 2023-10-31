@@ -1,4 +1,5 @@
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
@@ -98,7 +99,11 @@ export function ErrorBoundary() {
               A fatal error has occurred and was logged.
             </h1>
             <code className="text-md">
-              {error instanceof Error ? error.message : JSON.stringify(error)}
+              {isRouteErrorResponse(error)
+                ? error.data
+                : error instanceof Error
+                ? error.stack
+                : 'Unknown Error'}
             </code>
           </div>
         )}
