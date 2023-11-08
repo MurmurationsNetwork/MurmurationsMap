@@ -75,6 +75,9 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError()
+  if (process.env.NODE_ENV === 'production') {
+    error.stack = undefined
+  }
 
   return (
     <html>
