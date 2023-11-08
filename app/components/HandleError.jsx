@@ -1,8 +1,6 @@
 import { isRouteErrorResponse } from '@remix-run/react'
 
 export default function HandleError(error) {
-  console.log(error)
-
   if (isRouteErrorResponse(error)) {
     return (
       <div className="container mx-auto flex h-screen flex-col items-center px-4">
