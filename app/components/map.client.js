@@ -5,7 +5,7 @@ import MarkerClusterGroup from '@changey/react-leaflet-markercluster'
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
-import { loadProfile } from '~/utils/load-profiles'
+import { loadProfile } from '~/utils/loadData'
 import { useEffect } from 'react'
 
 delete L.Icon.Default.prototype._getIconUrl

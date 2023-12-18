@@ -1,6 +1,5 @@
-import { lazy, useState } from 'react'
-import { loadProfiles } from '~/utils/load-profiles'
-import { loadSchemas } from '~/utils/load-schemas'
+import { lazy } from 'react'
+import { loadProfiles, loadSchemas } from '~/utils/loadData'
 import { json } from '@remix-run/node'
 import { useLoaderData, useRouteError, useSearchParams } from '@remix-run/react'
 import leafletStyles from 'leaflet/dist/leaflet.css'
@@ -9,41 +8,67 @@ import { ClientOnly } from 'remix-utils/client-only'
 import HandleError from '~/components/HandleError'
 
 export async function loader({ request }) {
-  const schemas = await loadSchemas()
-  const url = new URL(request.url)
-  const params = getParams(url?.searchParams)
-  const profiles = await loadProfiles(params)
+  try {
+    const url = new URL(request.url)
+    const params = getParams(url.searchParams)
+    const [schemas, profiles] = await Promise.all([
+      loadSchemas(),
+      loadProfiles(params)
+    ])
 
-  return json({
-    schemas: schemas,
-    profiles: profiles?.data,
-    origin: url?.origin
-  })
+    return json({
+      schemas,
+      profiles: profiles?.data,
+      origin: url.origin
+    })
+  } catch (error) {
+    throw new Response('Error loading data', { status: 500 })
+  }
 }
 
 export default function Index() {
   const Map = lazy(() => import('~/components/map.client'))
 
-  const loaderData = useLoaderData()
-  const schemas = loaderData?.schemas ?? []
+  const { schemas, profiles, origin } = useLoaderData()
   const [searchParams] = useSearchParams()
-  const schema = searchParams.get('schema')
-  const name = searchParams.get('name')
-  const tags = searchParams.get('tags')
-  const primaryUrl = searchParams.get('primary_url')
-  const lastUpdated = searchParams.get('last_updated')
-    ? new Date(searchParams.get('last_updated') * 1000)
-        .toISOString()
-        .slice(0, -5)
-    : null
+
+  const formState = {
+    schema: searchParams.get('schema') ?? 'organizations_schema-v1.0.0',
+    name: searchParams.get('name') ?? '',
+    tags: searchParams.get('tags') ?? '',
+    primaryUrl: searchParams.get('primary_url') ?? '',
+    lastUpdated: searchParams.get('last_updated')
+      ? new Date(searchParams.get('last_updated') * 1000)
+          .toISOString()
+          .slice(0, -5)
+      : ''
+  }
 
   // leaflet parameters
   const lat = searchParams.get('lat')
   const lon = searchParams.get('lon')
   const zoom = searchParams.get('zoom')
   const hideSearch = searchParams.get('hide_search')
-  const origin = loaderData?.origin
-  const [profiles] = useState(loaderData?.profiles)
+
+  const handleSubmit = event => {
+    event.preventDefault()
+    const fields = ['schema', 'name', 'tags', 'primary_url', 'last_updated']
+    let searchParams = new URLSearchParams('')
+
+    fields.forEach(field => {
+      const value = event?.target?.[field]?.value
+      if (value) {
+        if (field === 'last_updated') {
+          searchParams.set(field, Date.parse(value) / 1000)
+        } else {
+          searchParams.set(field, value)
+        }
+      }
+    })
+
+    const getParameters = getParams(searchParams)
+    window.location.search = '?' + getParameters
+  }
 
   return (
     <div>
@@ -77,56 +102,13 @@ export default function Index() {
             <div className="flex-initial shrink">
               <form
                 className="flex flex-col items-center justify-center text-center md:flex-row md:justify-evenly md:pr-16"
-                onSubmit={event => {
-                  event.preventDefault()
-                  let searchParams = new URLSearchParams('')
-                  if (
-                    event?.target?.schema?.value &&
-                    event.target.schema.value !== ''
-                  ) {
-                    searchParams.set('schema', event.target.schema.value)
-                  }
-                  if (
-                    event?.target?.name?.value &&
-                    event.target.name.value !== ''
-                  ) {
-                    searchParams.set('name', event.target.name.value)
-                  }
-                  if (
-                    event?.target?.tags?.value &&
-                    event.target.tags.value !== ''
-                  ) {
-                    searchParams.set('tags', event.target.tags.value)
-                  }
-                  if (
-                    event?.target?.primary_url?.value &&
-                    event.target.primary_url.value !== ''
-                  ) {
-                    searchParams.set(
-                      'primary_url',
-                      event.target.primary_url.value
-                    )
-                  }
-                  if (
-                    event?.target?.last_updated?.value &&
-                    event.target.last_updated.value !== ''
-                  ) {
-                    searchParams.set(
-                      'last_updated',
-                      Date.parse(event.target.last_updated.value) / 1000
-                    )
-                  }
-                  const getParameters = getParams(searchParams)
-                  window.location.search = '?' + getParameters
-                }}
+                onSubmit={handleSubmit}
               >
                 <div className="py-1 md:px-1">
                   <select
                     className="focus:shadow-outline block w-full rounded border px-3 py-2 text-gray-700 focus:outline-none"
                     name="schema"
-                    defaultValue={
-                      schema ? schema : 'organizations_schema-v1.0.0'
-                    }
+                    defaultValue={formState.schema}
                   >
                     {schemas
                       ?.filter(s => {
@@ -152,7 +134,7 @@ export default function Index() {
                     type="text"
                     placeholder="Name"
                     name="name"
-                    defaultValue={name}
+                    defaultValue={formState.name}
                   />
                 </div>
                 <div className="py-1 md:px-1">
@@ -161,7 +143,7 @@ export default function Index() {
                     type="text"
                     placeholder="Tags"
                     name="tags"
-                    defaultValue={tags}
+                    defaultValue={formState.tags}
                   />
                 </div>
                 <div className="py-1 md:px-1">
@@ -170,7 +152,7 @@ export default function Index() {
                     type="text"
                     placeholder="primary_url"
                     name="primary_url"
-                    defaultValue={primaryUrl}
+                    defaultValue={formState.primaryUrl}
                   />
                 </div>
                 <div className="py-1 md:px-1">
@@ -179,14 +161,14 @@ export default function Index() {
                     placeholder="last_updated search"
                     type="datetime-local"
                     name="last_updated"
-                    defaultValue={lastUpdated}
+                    defaultValue={formState.lastUpdated}
                   />
                 </div>
                 <div className="py-1 md:px-1">
                   <button
                     className="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
                     type="submit"
-                    onClick={e =>
+                    onClick={_ =>
                       window.goatcounter.count({
                         path: p => p + '?filter',
                         title: 'Map filter',
@@ -206,7 +188,7 @@ export default function Index() {
                 href="https://docs.murmurations.network/guides/map.html"
                 target="_blank"
                 rel="noreferrer"
-                onClick={e =>
+                onClick={_ =>
                   window.goatcounter.count({
                     path: p => p + '?docs',
                     title: 'Map docs',
@@ -254,48 +236,12 @@ export function ErrorBoundary() {
 }
 
 function getParams(searchParams) {
-  let getParams = ''
-  if (searchParams.get('schema')) {
-    getParams += 'schema=' + searchParams.get('schema') + '&'
-  }
-  if (searchParams.get('name')) {
-    getParams += 'name=' + searchParams.get('name') + '&'
-  }
-  if (searchParams.get('tags')) {
-    getParams += 'tags=' + searchParams.get('tags') + '&'
-  }
-  if (searchParams.get('primary_url')) {
-    getParams += 'primary_url=' + searchParams.get('primary_url') + '&'
-  }
-  if (searchParams.get('last_updated')) {
-    getParams += 'last_updated=' + searchParams.get('last_updated') + '&'
-  }
-  if (
-    searchParams.get('tags_exact') === 'true' ||
-    searchParams.get('tags_exact') === 'false'
-  ) {
-    getParams += 'tags_exact=' + searchParams.get('tags_exact') + '&'
-  }
-  if (
-    searchParams.get('tags_filter') === 'and' ||
-    searchParams.get('tags_filter') === 'or'
-  ) {
-    getParams += 'tags_filter=' + searchParams.get('tags_filter') + '&'
-  }
+  const params = new URLSearchParams(searchParams)
   // issue-26 lat, lon, range
-  if (
-    searchParams.get('lat') &&
-    searchParams.get('lon') &&
-    searchParams.get('range')
-  ) {
-    getParams +=
-      'lat=' +
-      searchParams.get('lat') +
-      '&lon=' +
-      searchParams.get('lon') +
-      '&range=' +
-      searchParams.get('range') +
-      '&'
+  if (!(params.get('lat') && params.get('lon') && params.get('range'))) {
+    params.delete('lat')
+    params.delete('lon')
+    params.delete('range')
   }
-  return getParams.slice(0, -1)
+  return params.toString()
 }
