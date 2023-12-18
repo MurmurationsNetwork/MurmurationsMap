@@ -1,4 +1,4 @@
-import { lazy, useMemo } from 'react'
+import { lazy } from 'react'
 import { loadProfiles, loadSchemas } from '~/utils/loadData'
 import { json } from '@remix-run/node'
 import { useLoaderData, useRouteError, useSearchParams } from '@remix-run/react'
@@ -32,20 +32,17 @@ export default function Index() {
   const { schemas, profiles, origin } = useLoaderData()
   const [searchParams] = useSearchParams()
 
-  const formState = useMemo(
-    () => ({
-      schema: searchParams.get('schema') ?? 'organizations_schema-v1.0.0',
-      name: searchParams.get('name') ?? '',
-      tags: searchParams.get('tags') ?? '',
-      primaryUrl: searchParams.get('primary_url') ?? '',
-      lastUpdated: searchParams.get('last_updated')
-        ? new Date(searchParams.get('last_updated') * 1000)
-            .toISOString()
-            .slice(0, -5)
-        : ''
-    }),
-    [searchParams]
-  )
+  const formState = {
+    schema: searchParams.get('schema') ?? 'organizations_schema-v1.0.0',
+    name: searchParams.get('name') ?? '',
+    tags: searchParams.get('tags') ?? '',
+    primaryUrl: searchParams.get('primary_url') ?? '',
+    lastUpdated: searchParams.get('last_updated')
+      ? new Date(searchParams.get('last_updated') * 1000)
+          .toISOString()
+          .slice(0, -5)
+      : ''
+  }
 
   // leaflet parameters
   const lat = searchParams.get('lat')
