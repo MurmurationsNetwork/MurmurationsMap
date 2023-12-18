@@ -12,7 +12,6 @@ import {
 
 import styles from '~/styles/app.css'
 import { json } from '@remix-run/node'
-import { err } from '@remix-run/dev/dist/result'
 
 export const links = () => [{ rel: 'stylesheet', href: styles }]
 
@@ -104,8 +103,8 @@ export function ErrorBoundary() {
               {isRouteErrorResponse(error)
                 ? error.data
                 : error instanceof Error
-                ? error.stack
-                : 'Unknown Error'}
+                  ? error.stack
+                  : 'Unknown Error'}
             </code>
           </div>
         )}
