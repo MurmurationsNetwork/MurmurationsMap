@@ -7,6 +7,17 @@ import leafletClusterStyles from '@changey/react-leaflet-markercluster/dist/styl
 import { ClientOnly } from 'remix-utils/client-only'
 import HandleError from '~/components/HandleError'
 
+const fields = [
+  'schema',
+  'name',
+  'tags',
+  'primary_url',
+  'last_updated',
+  'lat',
+  'lon',
+  'range'
+]
+
 export async function loader({ request }) {
   try {
     const url = new URL(request.url)
@@ -16,13 +27,21 @@ export async function loader({ request }) {
       loadProfiles(params)
     ])
 
+    if (schemas?.errors) {
+      throw new Error(`${JSON.stringify(schemas.errors)}`)
+    }
+
+    if (profiles?.errors) {
+      throw new Error(`${JSON.stringify(profiles.errors)}`)
+    }
+
     return json({
       schemas,
       profiles: profiles?.data,
       origin: url.origin
     })
   } catch (error) {
-    throw new Response('Error loading data', { status: 500 })
+    throw new Response(`Error loading data: ${error}`, { status: 500 })
   }
 }
 
@@ -52,7 +71,6 @@ export default function Index() {
 
   const handleSubmit = event => {
     event.preventDefault()
-    const fields = ['schema', 'name', 'tags', 'primary_url', 'last_updated']
     let searchParams = new URLSearchParams('')
 
     fields.forEach(field => {
@@ -237,7 +255,17 @@ export function ErrorBoundary() {
 
 function getParams(searchParams) {
   const params = new URLSearchParams(searchParams)
-  params.delete('hide_search')
+  // filter undesired fields
+  const keysToDelete = []
+  for (let key of params.keys()) {
+    if (!fields.includes(key)) {
+      keysToDelete.push(key)
+    }
+  }
+  for (let key of keysToDelete) {
+    params.delete(key)
+  }
+
   // issue-26 lat, lon, range
   if (!(params.get('lat') && params.get('lon') && params.get('range'))) {
     params.delete('lat')
