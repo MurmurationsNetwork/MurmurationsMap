@@ -1,6 +1,10 @@
 export async function loadSchemas() {
   try {
     const res = await fetch(process.env.LIBRARY_URL + '/v2/schemas')
+    if (!res.ok) {
+      const data = await handleNotOK(res)
+      return { status: res.status, errors: data }
+    }
     const schemas = await res.json()
     return schemas?.data.map(item => item.name)
   } catch (e) {
@@ -30,6 +34,10 @@ export async function loadProfiles(params) {
         (hasSchema ? '' : 'schema=organizations_schema-v1.0.0') +
         params
     )
+    if (!res.ok) {
+      const data = await handleNotOK(res)
+      return { status: res.status, errors: data }
+    }
     return await res.json()
   } catch (e) {
     throw new Response(`loadProfiles error: ${e}`, {
@@ -49,4 +57,15 @@ export async function loadProfile(profileUrl) {
       status: 500
     })
   }
+}
+
+async function handleNotOK(res) {
+  let data
+  const contentType = res.headers.get('content-type')
+  if (contentType && contentType.includes('application/json')) {
+    data = await res.json()
+  } else {
+    data = await res.text()
+  }
+  return data
 }
