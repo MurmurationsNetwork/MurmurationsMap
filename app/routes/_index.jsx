@@ -237,6 +237,7 @@ export function ErrorBoundary() {
 
 function getParams(searchParams) {
   const params = new URLSearchParams(searchParams)
+  params.delete('hide_search')
   // issue-26 lat, lon, range
   if (!(params.get('lat') && params.get('lon') && params.get('range'))) {
     params.delete('lat')
