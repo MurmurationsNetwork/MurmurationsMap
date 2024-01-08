@@ -89,7 +89,7 @@ export function ErrorBoundary() {
         {error.status === 404 ? (
           <div className="container mx-auto flex h-screen flex-col items-center justify-center px-4">
             <h1 className="mb-8 text-xl font-bold">Page Not Found</h1>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            <button className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700">
               <a href="/">Return to Home</a>
             </button>
           </div>
