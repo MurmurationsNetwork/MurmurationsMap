@@ -1,4 +1,3 @@
-import { lazy } from 'react'
 import { loadProfiles, loadSchemas } from '~/utils/loadData'
 import { json } from '@remix-run/node'
 import { useLoaderData, useRouteError, useSearchParams } from '@remix-run/react'
@@ -6,6 +5,7 @@ import leafletStyles from 'leaflet/dist/leaflet.css'
 import leafletClusterStyles from '@changey/react-leaflet-markercluster/dist/styles.min.css'
 import { ClientOnly } from 'remix-utils/client-only'
 import HandleError from '~/components/HandleError'
+import MapClient from '~/components/map.client'
 
 const fields = [
   'schema',
@@ -46,8 +46,6 @@ export async function loader({ request }) {
 }
 
 export default function Index() {
-  const Map = lazy(() => import('~/components/map.client'))
-
   const { schemas, profiles, origin } = useLoaderData()
   const [searchParams] = useSearchParams()
 
@@ -233,7 +231,9 @@ export default function Index() {
               <h2 className="text-center">Map is loading and rendering...</h2>
             }
           >
-            {() => <Map profiles={profiles} lat={lat} lon={lon} zoom={zoom} />}
+            {() => (
+              <MapClient profiles={profiles} lat={lat} lon={lon} zoom={zoom} />
+            )}
           </ClientOnly>
         </div>
       </div>
