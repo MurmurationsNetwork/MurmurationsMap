@@ -6,7 +6,6 @@ export default function HandleError(error) {
   }
 
   if (isRouteErrorResponse(error)) {
-    console.log(error)
     return (
       <div className="container mx-auto flex h-screen flex-col items-center px-4">
         <span className="mb-8 text-5xl">🤬</span>
