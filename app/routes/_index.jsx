@@ -28,11 +28,18 @@ export async function loader({ request }) {
     ])
 
     if (schemas?.errors) {
-      throw new Error(`${JSON.stringify(schemas.errors)}`)
+      throw new Error(
+        `${JSON.stringify({ status: schemas.status, errors: schemas.errors })}`
+      )
     }
 
     if (profiles?.errors) {
-      throw new Error(`${JSON.stringify(profiles.errors)}`)
+      throw new Error(
+        `${JSON.stringify({
+          status: profiles.status,
+          errors: profiles.errors
+        })}`
+      )
     }
 
     return json({
@@ -41,7 +48,11 @@ export async function loader({ request }) {
       origin: url.origin
     })
   } catch (error) {
-    throw new Response(`Error loading data: ${error}`, { status: 500 })
+    const errorObject = JSON.parse(error.message)
+    throw new Response(
+      `Error loading data: ${JSON.stringify(errorObject?.errors)}`,
+      { status: errorObject?.status ?? 500 }
+    )
   }
 }
 
