@@ -3,14 +3,20 @@ export async function loadSchemas() {
     const res = await fetch(process.env.LIBRARY_URL + '/v2/schemas')
     if (!res.ok) {
       const data = await handleNotOK(res)
-      return { status: res.status, errors: data }
+      throw new Response(JSON.stringify(data), {
+        status: res.status
+      })
     }
     const schemas = await res.json()
     return schemas?.data.map(item => item.name)
   } catch (e) {
-    throw new Response(`loadSchemas error: ${e}`, {
-      status: 500
-    })
+    if (e instanceof Response) {
+      throw e
+    } else {
+      throw new Response(`loadSchemas error: ${e.message || e}`, {
+        status: 500
+      })
+    }
   }
 }
 
@@ -36,13 +42,19 @@ export async function loadProfiles(params) {
     )
     if (!res.ok) {
       const data = await handleNotOK(res)
-      return { status: res.status, errors: data }
+      throw new Response(JSON.stringify(data), {
+        status: res.status
+      })
     }
     return await res.json()
   } catch (e) {
-    throw new Response(`loadProfiles error: ${e}`, {
-      status: 500
-    })
+    if (e instanceof Response) {
+      throw e
+    } else {
+      throw new Response(`loadProfiles error: ${e.message || e}`, {
+        status: 500
+      })
+    }
   }
 }
 
@@ -51,11 +63,22 @@ export async function loadProfile(profileUrl) {
     const res = await fetch(
       window.ENV.ALLOCATOR_URL + '/profile?profile_url=' + profileUrl
     )
+    if (!res.ok) {
+      const data = await handleNotOK(res)
+      throw new Response(JSON.stringify(data), {
+        status: res.status
+      })
+    }
+
     return await res.json()
   } catch (e) {
-    throw new Response(`loadProfile error: ${e}`, {
-      status: 500
-    })
+    if (e instanceof Response) {
+      throw e
+    } else {
+      throw new Response(`loadProfile error: ${e.message || e}`, {
+        status: 500
+      })
+    }
   }
 }
 
