@@ -19,41 +19,18 @@ const fields = [
 ]
 
 export async function loader({ request }) {
-  try {
-    const url = new URL(request.url)
-    const params = getParams(url.searchParams)
-    const [schemas, profiles] = await Promise.all([
-      loadSchemas(),
-      loadProfiles(params)
-    ])
+  const url = new URL(request.url)
+  const params = getParams(url.searchParams)
+  const [schemas, profiles] = await Promise.all([
+    loadSchemas(),
+    loadProfiles(params)
+  ])
 
-    if (schemas?.errors) {
-      throw new Error(
-        `${JSON.stringify({ status: schemas.status, errors: schemas.errors })}`
-      )
-    }
-
-    if (profiles?.errors) {
-      throw new Error(
-        `${JSON.stringify({
-          status: profiles.status,
-          errors: profiles.errors
-        })}`
-      )
-    }
-
-    return json({
-      schemas,
-      profiles: profiles?.data,
-      origin: url.origin
-    })
-  } catch (error) {
-    const errorObject = JSON.parse(error.message)
-    throw new Response(
-      `Error loading data: ${JSON.stringify(errorObject?.errors)}`,
-      { status: errorObject?.status ?? 500 }
-    )
-  }
+  return json({
+    schemas,
+    profiles: profiles?.data,
+    origin: url.origin
+  })
 }
 
 export default function Index() {
