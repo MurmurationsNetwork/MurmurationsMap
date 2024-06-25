@@ -15,7 +15,9 @@ const fields = [
   'last_updated',
   'lat',
   'lon',
-  'range'
+  'range',
+  'tags_exact',
+  'tags_filter'
 ]
 
 export async function loader({ request }) {
