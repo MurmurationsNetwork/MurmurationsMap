@@ -7,3 +7,9 @@
         font-family: system-ui, sans-serif;
     }
 }
+
+@media (max-width: 768px) {
+    .leaflet-popup-content {
+        font-size: 200% !important;
+    }
+}
