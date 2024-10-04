@@ -8,7 +8,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1290px) {
     .leaflet-popup-content {
         font-size: 200% !important;
     }
