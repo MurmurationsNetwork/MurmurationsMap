@@ -56,12 +56,11 @@ const MapClient = ({ profiles, lat, lon, zoom }) => {
                   content +=
                     "<p>URL: <a target='_blank' rel='noreferrer' href='https://" +
                     data.primary_url +
-                    "'>" +
+                    "' style='word-wrap: break-word; max-width: 200px;'>" +
                     data.primary_url +
                     '</a></p>'
                 }
                 if (data?.tags) {
-                  // content += '<p>tags: ' + data.tags + '</p>'
                   content += '<div>Tags:</div><div class="flex flex-wrap">'
                   for (let i = 0; i < data.tags.length; i++) {
                     content += `<span class="bg-red-500 text-white font-bold py-1 px-2 m-1 rounded">${data.tags[i]}</span>`
