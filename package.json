@@ -28,7 +28,7 @@
     "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
     "@remix-run/node": "^2.12.1",
     "@remix-run/react": "^2.12.1",
-    "@remix-run/serve": "^2.12.1",
+    "@remix-run/serve": "^2.16.4",
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
